@@ -11,7 +11,15 @@ body{
 
 .SideBar{
   height: 100vh;
-  width: 300px;
-  background-color: #692222;
+  min-width: 300px;
+   /* background:linear-gradient(180deg, #bc18dd 30%, #1aa599 90%) */
+   
+   background-color: #bc18dd;
+
+   display: flex;
+   flex-direction: column;
+
+   align-items: flex-start;
 }
+
 

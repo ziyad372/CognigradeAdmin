@@ -1,0 +1,39 @@
+body{
+    background:linear-gradient(120deg, #EAD6EE 30%, #A0F1EA 90%)
+
+}
+
+.login{
+    width: 400px;
+    height: 300px;
+    /* border: 1px solid black ; */
+    /* margin: auto; */
+    /* padding: 100px; */
+    border-radius: 20px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.form1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+}
+.mainSquare{
+    width: 1000px;
+    display: flex;
+    margin: auto;
+    box-shadow: 2px 2px 2px rgba(2, 21, 27, 0.267);
+    /* border: 1px solid black; */
+}
+.square1{
+
+width: 600px;
+height: 500px;
+background:linear-gradient(120deg, #bc18dd 30%, #1aa599 90%)
+
+}
