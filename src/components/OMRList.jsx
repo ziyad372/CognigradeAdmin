@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
   Container,
-  Select,
-  MenuItem,
-  CircularProgress,
-  FormControl,
-  InputLabel,
-  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -18,144 +12,137 @@ import {
   DialogActions,
   Typography,
   Button,
+  CircularProgress,
+  IconButton,
   TextField,
+  FormControl,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { axiosPrivate } from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import AddIcon from '@mui/icons-material/Add';
 
-const UserList = () => {
-  const [users, setUsers] = useState([]);
-  const [roleFilter, setRoleFilter] = useState("");
+const OMRList = () => {
+  const [omrs, setOMRs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedOMR, setSelectedOMR] = useState(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [userToEdit, setUserToEdit] = useState({});
-  
+  const [omrToEdit, setOMRToEdit] = useState({});
+
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchOMRs = async () => {
       const accessToken = localStorage.getItem("accessToken");
 
       try {
-        const response = await axiosPrivate.get("/api/v1/users/", {
+        const response = await axiosPrivate.get("/api/v1/omr/", {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         console.log(response);
-        setUsers(response.data.results);
+        setOMRs(response.data.results);
         setLoading(false);
       } catch (error) {
-        console.error("Failed to fetch users:", error);
+        console.error("Failed to fetch OMRs:", error);
         setLoading(false);
       }
     };
 
-    fetchUsers();
+    fetchOMRs();
   }, []);
 
-  const handleRoleFilterChange = (event) => {
-    setRoleFilter(event.target.value);
-  };
-
-  const filteredUsers = roleFilter
-    ? users.filter((user) => user.role === roleFilter)
-    : users;
-
-  const handleFetchUserDetails = async (id) => {
+  const handleFetchOMRDetails = async (id) => {
     const accessToken = localStorage.getItem("accessToken");
 
     try {
-      const response = await axiosPrivate.get(`/api/v1/users/${id}/`, {
+      const response = await axiosPrivate.get(`/api/v1/omr/${id}/`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
-      setSelectedUser(response.data);
+      setSelectedOMR(response.data);
       setDialogOpen(true);
     } catch (error) {
-      console.error("Failed to fetch user details:", error);
+      console.error("Failed to fetch OMR details:", error);
     }
   };
 
   const handleCloseDialog = () => {
     setDialogOpen(false);
-    setSelectedUser(null);
+    setSelectedOMR(null);
   };
 
-  const handleEditUser = (user) => {
-    setUserToEdit(user);
+  const handleEditOMR = (omr) => {
+    setOMRToEdit(omr);
     setEditDialogOpen(true);
   };
 
   const handleCloseEditDialog = () => {
     setEditDialogOpen(false);
-    setUserToEdit({});
+    setOMRToEdit({});
   };
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
-    setUserToEdit((prevUser) => ({ ...prevUser, [name]: value }));
+    setOMRToEdit((prevOMR) => ({ ...prevOMR, [name]: value }));
   };
 
   const handleEditSubmit = async () => {
     const accessToken = localStorage.getItem("accessToken");
 
     try {
-      await axiosPrivate.patch(`/api/v1/users/${userToEdit.id}/`, userToEdit, {
+      await axiosPrivate.patch(`/api/v1/omr/${omrToEdit.id}/`, omrToEdit, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
-      setUsers(
-        users.map((user) => (user.id === userToEdit.id ? userToEdit : user))
+      setOMRs(
+        omrs.map((omr) => (omr.id === omrToEdit.id ? omrToEdit : omr))
       );
       setEditDialogOpen(false);
-      console.log(`User with ID ${userToEdit.id} updated successfully`);
+      console.log(`OMR with ID ${omrToEdit.id} updated successfully`);
     } catch (error) {
-      console.error("Failed to update user:", error);
+      console.error("Failed to update OMR:", error);
     }
   };
 
-  const handleDeleteUser = (user) => {
-    setSelectedUser(user);
+  const handleDeleteOMR = (omr) => {
+    setSelectedOMR(omr);
     setDeleteDialogOpen(true);
   };
 
   const handleCloseDeleteDialog = () => {
     setDeleteDialogOpen(false);
-    setSelectedUser(null);
+    setSelectedOMR(null);
   };
 
   const handleDeleteSubmit = async () => {
     const accessToken = localStorage.getItem("accessToken");
 
     try {
-      await axiosPrivate.delete(`/api/v1/users/${selectedUser.id}/`, {
+      await axiosPrivate.delete(`/api/v1/omr/${selectedOMR.id}/`, {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
-      setUsers(users.filter((user) => user.id !== selectedUser.id));
+      setOMRs(omrs.filter((omr) => omr.id !== selectedOMR.id));
       setDeleteDialogOpen(false);
-      console.log(`User with ID ${selectedUser.id} deleted successfully`);
+      console.log(`OMR with ID ${selectedOMR.id} deleted successfully`);
     } catch (error) {
-      console.error("Failed to delete user:", error);
+      console.error("Failed to delete OMR:", error);
     }
   };
 
-
-
   const navigate = useNavigate();
 
-  const handleAddUser = () => {
-    navigate("/addUser");
+  const handleAddOMR = () => {
+    navigate("/createOMR");
   };
+
   return (
     <Container>
       <FormControl fullWidth margin="normal" variant="outlined">
         <Button
           variant="contained"
           color="primary"
-          startIcon={<AddIcon/>}
-          onClick={handleAddUser}
+          startIcon={<AddIcon />}
+          onClick={handleAddOMR}
           sx={{
             // width: "150px",
             bgcolor: "green",
@@ -164,18 +151,8 @@ const UserList = () => {
               marginBottom: "100px",
           }}
         >
-          Add User
+          Add OMR
         </Button>
-        <Select
-          value={roleFilter}
-          onChange={handleRoleFilterChange}
-          label="Filter by role"
-        >
-          <MenuItem value="">All</MenuItem>
-          <MenuItem value="admin">Admin</MenuItem>
-          <MenuItem value="student">Student</MenuItem>
-          <MenuItem value="teacher">Teacher</MenuItem>
-        </Select>
       </FormControl>
       {loading ? (
         <CircularProgress />
@@ -184,16 +161,13 @@ const UserList = () => {
           <TableHead>
             <TableRow>
               <TableCell>ID</TableCell>
-              <TableCell>First Name</TableCell>
-              <TableCell>Last Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Role</TableCell>
-              <TableCell>Active</TableCell>
+              <TableCell>Title</TableCell>
+              <TableCell>Classroom</TableCell>
               <TableCell>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredUsers.map((user) => (
+            {omrs.map((omr) => (
               <TableRow
                 sx={{
                   width: "1000px",
@@ -201,22 +175,19 @@ const UserList = () => {
                   bgcolor: "white",
                   borderRadius: "10px",
                 }}
-                key={user.id}
+                key={omr.id}
               >
-                <TableCell>{user.id}</TableCell>
-                <TableCell>{user.first_name || "N/A"}</TableCell>
-                <TableCell>{user.last_name || "N/A"}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.role}</TableCell>
-                <TableCell>{user.is_active ? "Yes" : "No"}</TableCell>
+                <TableCell>{omr.id}</TableCell>
+                <TableCell>{omr.title}</TableCell>
+                <TableCell>{omr.classroom}</TableCell>
                 <TableCell>
-                  <IconButton onClick={() => handleFetchUserDetails(user.id)}>
+                  <IconButton onClick={() => handleFetchOMRDetails(omr.id)}>
                     <VisibilityIcon />
                   </IconButton>
-                  <IconButton onClick={() => handleEditUser(user)}>
+                  <IconButton onClick={() => handleEditOMR(omr)}>
                     <EditIcon />
                   </IconButton>
-                  <IconButton onClick={() => handleDeleteUser(user)}>
+                  <IconButton onClick={() => handleDeleteOMR(omr)}>
                     <DeleteIcon />
                   </IconButton>
                 </TableCell>
@@ -225,68 +196,44 @@ const UserList = () => {
           </TableBody>
         </Table>
       )}
-      {selectedUser && (
+      {selectedOMR && (
         <Dialog open={dialogOpen} onClose={handleCloseDialog}>
-          <DialogTitle>User Details</DialogTitle>
+          <DialogTitle>OMR Details</DialogTitle>
           <DialogContent>
-            <Typography>ID: {selectedUser.id}</Typography>
-            <Typography>
-              First Name: {selectedUser.first_name || "N/A"}
-            </Typography>
-            <Typography>
-              Last Name: {selectedUser.last_name || "N/A"}
-            </Typography>
-            <Typography>Email: {selectedUser.email}</Typography>
-            <Typography>Role: {selectedUser.role}</Typography>
-            <Typography>
-              Active: {selectedUser.is_active ? "Yes" : "No"}
-            </Typography>
+            <Typography>ID: {selectedOMR.id}</Typography>
+            <Typography>Title: {selectedOMR.title}</Typography>
+            <Typography>Classroom ID: {selectedOMR.classroom}</Typography>
+            <Typography>Questions: {selectedOMR.questions.map(q => q.answer).join(', ')}</Typography>
             <Button variant="contained" onClick={handleCloseDialog}>
               Close
             </Button>
           </DialogContent>
         </Dialog>
       )}
-      {userToEdit && (
+      {omrToEdit && (
         <Dialog open={editDialogOpen} onClose={handleCloseEditDialog}>
-          <DialogTitle>Edit User</DialogTitle>
+          <DialogTitle>Edit OMR</DialogTitle>
           <DialogContent>
             <TextField
-              name="first_name"
-              label="First Name"
-              value={userToEdit.first_name || ""}
+              name="title"
+              label="Title"
+              value={omrToEdit.title}
               onChange={handleEditChange}
               fullWidth
               margin="normal"
             />
             <TextField
-              name="last_name"
-              label="Last Name"
-              value={userToEdit.last_name || ""}
+              name="classroom"
+              label="Classroom ID"
+              value={omrToEdit.classroom}
               onChange={handleEditChange}
               fullWidth
               margin="normal"
             />
             <TextField
-              name="email"
-              label="Email"
-              value={userToEdit.email || ""}
-              onChange={handleEditChange}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              name="role"
-              label="Role"
-              value={userToEdit.role || ""}
-              onChange={handleEditChange}
-              fullWidth
-              margin="normal"
-            />
-            <TextField
-              name="is_active"
-              label="Active"
-              value={userToEdit.is_active ? "Yes" : "No"}
+              name="questions"
+              label="Questions"
+            //   value={omrToEdit.questions.map(q => q.answer).join(', ')}
               onChange={handleEditChange}
               fullWidth
               margin="normal"
@@ -302,12 +249,12 @@ const UserList = () => {
           </DialogActions>
         </Dialog>
       )}
-      {selectedUser && (
+      {selectedOMR && (
         <Dialog open={deleteDialogOpen} onClose={handleCloseDeleteDialog}>
           <DialogTitle>Confirm Delete</DialogTitle>
           <DialogContent>
             <Typography>
-              Are you sure you want to delete user {selectedUser.email}?
+              Are you sure you want to delete OMR {selectedOMR.title}?
             </Typography>
           </DialogContent>
           <DialogActions>
@@ -324,4 +271,4 @@ const UserList = () => {
   );
 };
 
-export default UserList;
+export default OMRList;

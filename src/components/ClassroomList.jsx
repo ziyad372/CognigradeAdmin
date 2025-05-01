@@ -55,41 +55,8 @@ const ClassroomList = () => {
       }
     };
 
-    const fetchTeachers = async () => {
-      const accessToken = localStorage.getItem("accessToken");
-
-      try {
-        const response = await axiosPrivate.get("/api/v1/users/", {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-
-        const filteredTeachers = "teacher"
-          ? response.data.results.filter((user) => user.role === "teacher")
-          : response.data.results;
-
-        console.log("Filtered users: ", filteredTeachers);
-        setTeachers(filteredTeachers);
-      } catch (err) {
-        console.error("Failed to fetch teachers:", err);
-      }
-    };
-
-    const fetchCourses = async () => {
-      const accessToken = localStorage.getItem("accessToken");
-
-      try {
-        const response = await axiosPrivate.get("/api/v1/courses/", {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        setCourses(response.data.results);
-      } catch (err) {
-        console.error("Failed to fetch courses:", err);
-      }
-    };
-
     fetchClassrooms();
-    fetchTeachers();
-    fetchCourses();
+
   }, []);
 
   const handleFetchClassroomDetails = async (id) => {
@@ -197,6 +164,12 @@ const ClassroomList = () => {
           color="primary"
           startIcon={<AddIcon />}
           onClick={handleAddClassroom}
+          sx={{
+            // width: "150px",
+            bgcolor: "green",
+            background:
+              "linear-gradient(120deg,  #bc18dd 30%, #a4dae7 90%)",
+          }}
         >
           Add Classroom
         </Button>
@@ -227,8 +200,8 @@ const ClassroomList = () => {
               >
                 <TableCell>{classroom.id}</TableCell>
                 <TableCell>{classroom.name}</TableCell>
-                <TableCell>{classroom.teacher_id}</TableCell>
-                <TableCell>{classroom.course_id}</TableCell>
+                <TableCell>{classroom.teacher.first_name} {classroom.teacher.last_name}</TableCell>
+                <TableCell>{classroom.course.code}</TableCell>
                 <TableCell>
                   <IconButton
                     onClick={() => handleFetchClassroomDetails(classroom.id)}

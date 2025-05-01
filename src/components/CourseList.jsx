@@ -148,6 +148,12 @@ const CourseList = () => {
           color="primary"
           startIcon={<AddIcon/>}
           onClick={handleAddCourse}
+          sx={{
+            // width: "150px",
+            bgcolor: "green",
+            background:
+              "linear-gradient(120deg,  #bc18dd 30%, #a4dae7 90%)",
+          }}
         >
           Add Course
         </Button>

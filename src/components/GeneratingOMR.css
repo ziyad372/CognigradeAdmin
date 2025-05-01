@@ -1,0 +1,106 @@
+#print{
+    background-color: white;
+}
+
+.h_box{
+    width: 200px;
+    height: 60px;
+    border: 1px solid black ;
+}
+.upperBox{
+    width: 600px;
+    height: 200px;
+    border: 1px solid black;
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+.main .upperBox img{
+    width: 100px;
+    height: 100px;
+    padding: 5px;
+    border: 1px solid black;
+
+
+}
+
+.question{
+    display: flex;
+    flex-direction: row;
+    width: 180px;
+    justify-content: space-between;
+    margin-bottom: 35px;
+}
+
+.question1{
+    display: flex;
+    flex-direction: row;
+    width: 180px;
+    justify-content: space-between;
+    /* margin-bottom: 25px; */
+}
+
+.button{
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    border: 1px solid black;
+    text-align: center;
+    font-size: 13px;
+    /* padding-bottom: 3px; */
+}
+
+.q_number{
+    font-size: 13px;
+    margin-right: 20px;
+}
+
+.q_number1{
+    font-size: 13px;
+    margin-right: 17px;
+}
+
+.boxOMR{
+
+    display: flex;
+    width: 600px;
+    justify-content: space-between;
+    border: 1px solid black;
+    padding: 15px 15px 15px 15px;
+    /* margin: auto; */
+}
+
+.main{
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    margin-left: 90px;
+}
+
+.footer{
+    margin-top: 10px;
+    width: 600px;
+    height: 100px;
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+
+}
+
+.f_box{
+    width: 150px;
+    height: 60px;
+    border: 1px solid black ;
+
+    
+}
+
+.f_box .title{
+    font-size: 13px;
+    text-align: center;
+    border-bottom: 1px solid black;
+}
+
+p{
+    margin: 0%;
+}

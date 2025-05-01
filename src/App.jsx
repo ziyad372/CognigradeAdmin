@@ -19,6 +19,14 @@ import AddCourse from "./components/addCourse";
 import CourseList from "./components/CourseList";
 import AddClassroom from "./components/AddClassroom";
 import ClassroomList from "./components/ClassroomList";
+import CreateOMR from "./components/CreateOMR";
+import OMRList from "./components/OMRList";
+import GeneratingOMR from "./components/GeneratingOMR";
+import CreateTheory from "./components/CreateTheory";
+import TheoryList from "./components/TheoryList";
+import GeneratingOMR_1 from "./components/GenerateOMR_1";
+import SubmitTheory from "./components/SubmitTheory";
+import SubmitTheoryList from "./components/SubmitTheoryList";
 
 function App() {
   return (
@@ -26,13 +34,34 @@ function App() {
       <Router>
         <AuthProvider>
           <Routes>
+            <Route path="/generatingOMR" exact element={<GeneratingOMR />} />
+
             <Route path="/login" exact element={<LogIn />} />
             <Route
               path="/*"
               element={
                 <ProtectedRoute>
-                  <SideBar />
-                  <AppRoutes />
+                  <div
+                    style={{
+                      display: "flex",
+                      width: "100%",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <SideBar />
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        // alignItems: "center",
+                        width: "100%",
+                        overflowY: "auto",
+                      }}
+                    >
+                      <AppRoutes />
+                    </div>
+                  </div>
+                  {/* </div> */}
                 </ProtectedRoute>
               }
             />
@@ -46,8 +75,7 @@ function App() {
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/home" exact element={<Home/>} />
-
+      <Route path="/home" exact element={<Home />} />
       <Route
         path="/addUser"
         exact
@@ -57,7 +85,6 @@ function AppRoutes() {
           </AdminElement>
         }
       />
-
       <Route
         path="/userList"
         exact
@@ -76,7 +103,6 @@ function AppRoutes() {
           </AdminElement>
         }
       />
-      
       <Route
         path="/courseList"
         exact
@@ -85,7 +111,7 @@ function AppRoutes() {
             <CourseList />
           </AdminElement>
         }
-      />      
+      />
       <Route
         path="/addClassroom"
         exact
@@ -95,7 +121,7 @@ function AppRoutes() {
           </AdminElement>
         }
       />
-       <Route
+      <Route
         path="/classroomList"
         exact
         element={
@@ -104,7 +130,71 @@ function AppRoutes() {
           </AdminElement>
         }
       />
+      <Route
+        path="/createOMR"
+        exact
+        element={
+          <AdminElement>
+            <CreateOMR />
+          </AdminElement>
+        }
+      />
+      <Route
+        path="/OMRList"
+        exact
+        element={
+          <AdminElement>
+            <OMRList />
+          </AdminElement>
+        }
+      />
+      <Route
+        path="/CreateTheory"
+        exact
+        element={
+          <AdminElement>
+            <CreateTheory />
+          </AdminElement>
+        }
+      />
+      <Route
+        path="/TheoryList"
+        exact
+        element={
+          <AdminElement>
+            <TheoryList />
+          </AdminElement>
+        }
+      />
+      <Route
+        path="/GeneratingOMR_1"
+        exact
+        element={
+          <AdminElement>
+            <GeneratingOMR_1/>
+          </AdminElement>
+        }
+      />
+      <Route
+        path="/SubmitTheoryList"
+        exact
+        element={
+          
+            <SubmitTheoryList/> 
+          
+        }
+      />
+      <Route
+        path="/SubmitTheory/:theoryId"
+        exact
+        element={
+            <SubmitTheory/> 
+        }
+      />
+      
     </Routes>
+
+
   );
 }
 

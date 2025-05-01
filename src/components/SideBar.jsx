@@ -28,14 +28,16 @@ export default function SideBar() {
 
       <Button
         onClick={handleLogout}
+        variant="text"
         sx={{ color: "white", fontSize: "20px", marginLeft: "20px" }}
       >
         Logout
       </Button>
 
       <Button
+        variant="text"
         onClick={() => navigate("/home")}
-        sx={{ color: "white", fontSize: "20px", marginLeft: "20px"}}
+        sx={{ color: "white", fontSize: "20px", marginLeft: "20px" }}
       >
         Home
       </Button>
@@ -57,6 +59,32 @@ export default function SideBar() {
       >
         Class Rooms
       </Button>
+      <Button
+        onClick={() => navigate("/OMRList")}
+        sx={{ color: "white", fontSize: "20px", marginLeft: "20px" }}
+      >
+        OMR
+      </Button>
+      <Button
+        onClick={() => navigate("/TheoryList")}
+        sx={{ color: "white", fontSize: "20px", marginLeft: "20px" }}
+      >
+        Theory
+      </Button>
+      <Button
+        onClick={() => navigate("/GeneratingOMR_1")}
+        sx={{ color: "white", fontSize: "20px", marginLeft: "20px" }}
+      >
+        Print OMR
+      </Button>
+      <Button
+        onClick={() => navigate("/SubmitTheoryList")}
+        sx={{ color: "white", fontSize: "20px", marginLeft: "20px" }}
+      >
+        Submit Theory
+      </Button>
+
+      
     </div>
   );
 }

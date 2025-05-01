@@ -4,10 +4,11 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 
 import * as yup from "yup";
-import { Button, styled, TextField, Typography } from "@mui/material";
+import { Alert, Button, styled, TextField, Typography } from "@mui/material";
 import { axiosPrivate } from "../api/axios";
 import "./Login.css";
 import AuthContext, { AuthProvider } from "../context/AuthProvider";
+import { useState } from "react";
 
 const schema = yup
   .object({
@@ -49,6 +50,7 @@ export default function LogIn() {
         navigate("/home");
       })
       .catch((err) => {
+        
         console.log(err);
       });
       
