@@ -32,6 +32,10 @@ const TheoryList = () => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [theoryToEdit, setTheoryToEdit] = useState({});
+  const [evaluationResult, setEvaluationResult] = useState(null);
+  const [evaluationDialogOpen, setEvaluationDialogOpen] = useState(false);
+  const [studentMap, setStudentMap] = useState({});
+  const [evaluatedTheoryIds, setEvaluatedTheoryIds] = useState([]);
 
   const navigate = useNavigate();
 
@@ -156,37 +160,49 @@ const TheoryList = () => {
 
   const handleEvaluateTheory = async (id) => {
     const accessToken = localStorage.getItem("accessToken");
-  
+
     const theory = theories.find((t) => t.id === id);
     if (!theory) {
       alert("Theory not found.");
       return;
     }
-  
+
     try {
-      
-  
       const evaluateResponse = await axios.post(
-        `/api/v1/theory/${id}/evaluate/`,{},
-        
+        `/api/v1/theory/${id}/evaluate/`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
-            
           },
         }
       );
-  
-      alert(`Theory ${id} evaluated successfully.`);
-      console.log("Evaluation Response:", evaluateResponse.data);
-  
+
+      const submissions = evaluateResponse.data.submissions;
+
+      const studentIds = [...new Set(submissions.map((s) => s.student))];
+      const studentMapTemp = {};
+
+      for (let studentId of studentIds) {
+        try {
+          const res = await axiosPrivate.get(`/api/v1/users/${studentId}/`, {
+            headers: { Authorization: `Bearer ${accessToken}` },
+          });
+          studentMapTemp[studentId] = res.data.first_name;
+        } catch (err) {
+          studentMapTemp[studentId] = `Student data not found`;
+        }
+      }
+
+      setStudentMap(studentMapTemp);
+      setEvaluationResult(evaluateResponse.data);
+      setEvaluationDialogOpen(true);
+      setEvaluatedTheoryIds((prev) => [...new Set([...prev, id])]);
     } catch (error) {
       console.error("Error evaluating theory:", error);
       alert("Evaluation failed.");
     }
   };
-  
-  
 
   return (
     <Container>
@@ -248,7 +264,9 @@ const TheoryList = () => {
                     onClick={() => handleEvaluateTheory(theory.id)}
                     sx={{ ml: 1 }}
                   >
-                    Evaluate
+                    {evaluatedTheoryIds.includes(theory.id)
+                      ? "View Evaluation Result"
+                      : "Evaluate"}
                   </Button>
                 </TableCell>
               </TableRow>
@@ -327,6 +345,41 @@ const TheoryList = () => {
           </DialogActions>
         </Dialog>
       )}
+
+      <Dialog
+        open={evaluationDialogOpen}
+        onClose={() => setEvaluationDialogOpen(false)}
+        fullWidth
+        maxWidth="md"
+      >
+        <DialogTitle>Evaluation Results</DialogTitle>
+        <DialogContent dividers>
+          {evaluationResult?.submissions?.map((submission) => (
+            <div key={submission.id} style={{ marginBottom: "20px" }}>
+              <Typography variant="h6">
+                {studentMap[submission.student] ||
+                  `Student ${submission.student}`}{" "}
+                - Score: {submission.score -1}
+              </Typography>
+              {submission.answers.map((ans) => (
+                <Typography key={ans.id} variant="body2" sx={{ pl: 2 }}>
+                  <strong>Ans: </strong> {ans.answer} — <strong>Marks:</strong>{" "}
+                  {ans.marks}
+                </Typography>
+              ))}
+              <hr style={{ margin: "10px 0" }} />
+            </div>
+          ))}
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => setEvaluationDialogOpen(false)}
+            variant="contained"
+          >
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 };

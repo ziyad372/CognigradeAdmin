@@ -27,6 +27,9 @@ import TheoryList from "./components/TheoryList";
 import GeneratingOMR_1 from "./components/GenerateOMR_1";
 import SubmitTheory from "./components/SubmitTheory";
 import SubmitTheoryList from "./components/SubmitTheoryList";
+import OMRSubmissionList from "./components/OMRSubmissionList";
+import AdminHome from "./components/AdminHome";
+import TheorySubmissionsList from "./components/TheorySubmissionList";
 
 function App() {
   return (
@@ -76,125 +79,157 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/home" exact element={<Home />} />
-      <Route
-        path="/addUser"
-        exact
-        element={
-          <AdminElement>
-            <AddUSer />
-          </AdminElement>
-        }
-      />
-      <Route
-        path="/userList"
-        exact
-        element={
-          <AdminElement>
-            <UserList />
-          </AdminElement>
-        }
-      />
-      <Route
-        path="/addCourse"
-        exact
-        element={
-          <AdminElement>
-            <AddCourse />
-          </AdminElement>
-        }
-      />
-      <Route
-        path="/courseList"
-        exact
-        element={
-          <AdminElement>
-            <CourseList />
-          </AdminElement>
-        }
-      />
-      <Route
-        path="/addClassroom"
-        exact
-        element={
-          <AdminElement>
-            <AddClassroom />
-          </AdminElement>
-        }
-      />
-      <Route
-        path="/classroomList"
-        exact
-        element={
-          <AdminElement>
-            <ClassroomList />
-          </AdminElement>
-        }
-      />
-      <Route
-        path="/createOMR"
-        exact
-        element={
-          <AdminElement>
-            <CreateOMR />
-          </AdminElement>
-        }
-      />
-      <Route
-        path="/OMRList"
-        exact
-        element={
-          <AdminElement>
-            <OMRList />
-          </AdminElement>
-        }
-      />
-      <Route
-        path="/CreateTheory"
-        exact
-        element={
-          <AdminElement>
-            <CreateTheory />
-          </AdminElement>
-        }
-      />
-      <Route
-        path="/TheoryList"
-        exact
-        element={
-          <AdminElement>
-            <TheoryList />
-          </AdminElement>
-        }
-      />
-      <Route
-        path="/GeneratingOMR_1"
-        exact
-        element={
-          <AdminElement>
-            <GeneratingOMR_1/>
-          </AdminElement>
-        }
-      />
+
       <Route
         path="/SubmitTheoryList"
         exact
         element={
-          
-            <SubmitTheoryList/> 
-          
+          <RoleRoute allowedRoles={["student"]}>
+            <SubmitTheoryList />
+          </RoleRoute>
         }
       />
       <Route
         path="/SubmitTheory/:theoryId"
         exact
         element={
-            <SubmitTheory/> 
+          <RoleRoute allowedRoles={["student"]}>
+            <SubmitTheory />
+          </RoleRoute>
         }
       />
-      
+
+      <Route
+        path="/CreateTheory"
+        exact
+        element={
+          <RoleRoute allowedRoles={["teacher"]}>
+            <CreateTheory />
+          </RoleRoute>
+        }
+      />
+      <Route
+        path="/TheoryList"
+        exact
+        element={
+          <RoleRoute allowedRoles={["teacher"]}>
+            <TheoryList />
+          </RoleRoute>
+        }
+      />
+      <Route
+        path="/GeneratingOMR_1"
+        exact
+        element={
+          <RoleRoute allowedRoles={["teacher"]}>
+            <GeneratingOMR_1 />
+          </RoleRoute>
+        }
+      />
+      <Route
+        path="/OMRList"
+        exact
+        element={
+          <RoleRoute allowedRoles={["teacher"]}>
+            <OMRList />
+          </RoleRoute>
+        }
+      />
+      <Route
+        path="/createOMR"
+        exact
+        element={
+          <RoleRoute allowedRoles={["teacher"]}>
+            <CreateOMR />
+          </RoleRoute>
+        }
+      />
+      <Route
+        path="/addClassroom"
+        exact
+        element={
+          <RoleRoute allowedRoles={["teacher"]}>
+            <AddClassroom />
+          </RoleRoute>
+        }
+      />
+      <Route
+        path="/classroomList"
+        exact
+        element={
+          <RoleRoute allowedRoles={["teacher"]}>
+            <ClassroomList />
+          </RoleRoute>
+        }
+      />
+
+      <Route
+        path="/addUser"
+        exact
+        element={
+          <RoleRoute allowedRoles={["admin"]}>
+            <AddUSer />
+          </RoleRoute>
+        }
+      />
+
+      <Route
+        path="/adminHome"
+        exact
+        element={
+          <RoleRoute allowedRoles={["admin"]}>
+            <AdminHome />
+          </RoleRoute>
+        }
+      />
+      <Route
+        path="/userList"
+        exact
+        element={
+          <RoleRoute allowedRoles={["admin"]}>
+            <UserList />
+          </RoleRoute>
+        }
+      />
+      <Route
+        path="/addCourse"
+        exact
+        element={
+          <RoleRoute allowedRoles={["admin"]}>
+            <AddCourse />
+          </RoleRoute>
+        }
+      />
+      <Route
+        path="/courseList"
+        exact
+        element={
+          <RoleRoute allowedRoles={["admin"]}>
+            <CourseList />
+          </RoleRoute>
+        }
+      />
+      <Route
+        path="/OMRSubmissionList"
+        exact
+        element={
+          <RoleRoute allowedRoles={["admin"]}>
+            <OMRSubmissionList />
+          </RoleRoute>
+        }
+      />
+      <Route
+        path="/TheorySubmissionsList"
+        exact
+        element={
+          <RoleRoute allowedRoles={["admin"]}>
+            <TheorySubmissionsList />
+          </RoleRoute>
+        }
+      />
+
+
     </Routes>
-
-
   );
 }
 
@@ -230,5 +265,19 @@ function ProtectedRoute({ children }) {
     return <Navigate to="/login" />;
   }
 }
+
+function RoleRoute({ allowedRoles, children }) {
+  const token = localStorage.getItem("authToken");
+  const role = localStorage.getItem("role");
+
+  if (!token) return <Navigate to="/login" />;
+
+  if (role === "admin" || allowedRoles.includes(role)) {
+    return <>{children}</>;
+  } else {
+    return <Navigate to="/login" />;
+  }
+}
+
 
 export default App;

@@ -21,10 +21,13 @@ const StyledTextField = styled(TextField)({
   marginBottom: "10px",
   width: "300px",
 
-  '& label.Mui-focused': { color: '#9c27b0', },
+  "& label.Mui-focused": { color: "#9c27b0" },
 
-  '& .MuiOutlinedInput-root':{
-  '&.Mui-focused fieldset': {borderImage: 'linear-gradient(45deg, #9c27b0 30%, #1aa599 90%) 1' },}
+  "& .MuiOutlinedInput-root": {
+    "&.Mui-focused fieldset": {
+      borderImage: "linear-gradient(45deg, #9c27b0 30%, #1aa599 90%) 1",
+    },
+  },
 });
 
 export default function LogIn() {
@@ -39,31 +42,62 @@ export default function LogIn() {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data) => {
-    const response = axiosPrivate
+  const onSubmit = async (data) => {
+    const response = await axiosPrivate
       .post("/api/v1/login/token/", data)
       .then((response) => {
         console.log(response);
         setAuth(response);
         localStorage.setItem("authToken", response.data.refresh);
         localStorage.setItem("accessToken", response.data.access);
-        navigate("/home");
+        
       })
       .catch((err) => {
-        
         console.log(err);
       });
-      
+
+    const accessToken = localStorage.getItem("accessToken");
+
+    const ins = await axiosPrivate
+      .get("/api/v1/users/me/", {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      })
+      .then((response) => {
+        console.log(response);
+        localStorage.setItem("institution", response.data.institution);
+        localStorage.setItem("role", response.data.role);
+
+        const role = localStorage.getItem("role");
+        if (role === "admin") {
+          navigate("/adminHome");
+        } else {
+          navigate("/home");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
     <>
       <div className="mainSquare">
         <div className="square1">
-          <Typography variant="h4" sx={{ color: "white", textAlign: "center", marginTop: "100px" }}>
+          <Typography
+            variant="h4"
+            sx={{ color: "white", textAlign: "center", marginTop: "100px" }}
+          >
             Welcome to COGNIGRADE
           </Typography>
-          <Typography sx={{ color: "white" , paddingX: "50px", fontWeight: "100", fontFamily: "roboto", marginTop: "30px"}}>
+          <Typography
+            sx={{
+              color: "white",
+              paddingX: "50px",
+              fontWeight: "100",
+              fontFamily: "roboto",
+              marginTop: "30px",
+            }}
+          >
             COGNIGRADE is a revolutionary AI-powered project designed to
             automate the grading process for Optical Mark Recognition (OMR)
             sheets and handwritten assignments. By integrating state-of-the-art
@@ -71,7 +105,12 @@ export default function LogIn() {
             for educational institutions and organizations
           </Typography>
 
-          <Typography variant="subtitle1" sx={{color: "white", marginLeft: "50px", marginTop: "150px"}}>©COGNIGRADE</Typography>
+          <Typography
+            variant="subtitle1"
+            sx={{ color: "white", marginLeft: "50px", marginTop: "150px" }}
+          >
+            ©COGNIGRADE
+          </Typography>
         </div>
         <div className="form1">
           <form className="login" onSubmit={handleSubmit(onSubmit)}>
@@ -111,8 +150,6 @@ export default function LogIn() {
               Login
             </Button>
           </form>
-
-          
         </div>
       </div>
     </>
